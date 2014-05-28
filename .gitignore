@@ -1,0 +1,23 @@
+# Generated Files
+/bin
+/gen
+*.class
+
+# Backups
+*~
+*.swp
+
+# Package Files
+*.jar
+*.war
+*.ear
+/lib
+
+# Jni generated files
+libs/
+obj/
+
+# Crossbuild archives and builds
+crossbuild/build/
+crossbuild/archives/
+crossbuild/ndk-*/

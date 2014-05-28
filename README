@@ -1,0 +1,95 @@
+Import Dives from Divecomputer
+==============================
+
+This project attempts to create framework for download of
+dive data from divecomputer on Android devices. This is a
+project under Subsurface for GSOC '14.
+Libdivecomputer is mainly used for all the dive computer
+related functions.
+
+It utilizes libftdi for communication with FTDI chips, which is
+present in majority of dive computers. And libusb for connection
+with USB devices.
+
+The main idea is to get permission for a USB device from
+the Java interface. When the user gives permission, then
+call the native side of the application to do all import
+tasks via libdivecomputer, libftdi and libusb.
+
+All this is experimental as working of the discussed procedure
+is not assured.
+
+Dependencies
+============
+
+1. Libdivecomputer is the core of this project.
+   http://libdivecomputer.org/
+2. Libftdi for interfacing with ftdi chips
+   http://www.intra2net.com/en/developer/libftdi/
+3. Libusb for interfacing with USB
+   http://www.libusb.org/
+4. Android NDK and SDK
+   http://developer.android.com/sdk/index.html
+   http://developer.android.com/tools/sdk/ndk/index.html
+
+Building
+========
+1. For building, one need to use the build.sh script.
+   Modify the script to add the location of android-sdk
+   and android-ndk.
+2. Run bash build.sh x86 (or) bash build.sh arm according
+   to the architecture you want to support. The default is
+   x86.
+3. The script will install the dependencies to crossbuild
+   directory.
+4. It also runs ndk-build on successful completion for
+   building jni libraries for the application.
+   Android.mk is the make file for this build.
+5. Import the folder to Eclipse and run the application.
+
+Note: For generating the Jni header files, one could use
+javah provided by JDK. For this project, I use this command
+to generate the headers.
+javah -jni -v -d jni -classpath bin/classes:../actionbarsherlock/bin/classes\
+	      :$ANDROID_SDK/platforms/android-19/android.jar com.subsurface.Home
+
+Android Application
+===================
+The android application is a simple application which lists the
+available USB devices on the screen. Their Vendor ID and Product ID
+are also visible in the list.
+On selecting one of the devices, the application asks for the permission
+to use it. Select yes.
+The output of this depends on the experiment.
+
+Experiment 1
+-------------
+Refer: https://github.com/mik3y/usb-serial-for-android
+As the first attempt, I tried to utilise the library usb-serial-for-android
+for interfacing with the ftdi interface present on the chip. But this effort
+was unsuccessful. The problem was that I was not able to read the response
+of the ftdi chip. The read() method was not returning anything except 06 20
+and a stream of zeros. Write method worked fine as the divecomputer showed the
+message "Download mode enabled" on sending INIT byte as it normally does.
+The reason behind this is unknown.
+This import interface can be accessed by removing and reconnecting the device.
+A dialog pops asking for permission to use this device. On selecting yes,
+it automatically goes to java import activity. The result can be seen
+on the screen as well as the logcat.
+
+Experiment 2
+-------------
+Refer:
+http://developer.android.com/reference/android/hardware/usb/UsbDeviceConnection.html#getFileDescriptor()
+In this experiment, the file descriptor obtained from UsbDeviceConnection
+is sent to the native side to be received by the libdivecomputer and
+import to be done utiising this. The results are logged using custom
+logging function formed in com_subsurface_Home.c which logs it in the
+android logcat. The above mentioned file is the tweaked universal.c
+script from libdiveomputer/examples/ for importing data from
+Heinrichs Weikamp OSTC3. utils.c (also from libdivecomputer/examples)
+is also tweaked for logging.
+This experiment failed because the file descriptor passed on by
+UsbDeviceConnection is the file descriptor of underlying USB device
+and not the tty device used for talking with it. Hence the error
+received in the logcat was "ENOTTY : Not a typewriter".
