@@ -53,53 +53,60 @@ popd
 
 # Prepare for building
 mkdir -vp build
-pushd build
 
 # Extract and build libusb
 if [ ! -e libusb-1.0.9 ] ; then
-	tar -jxf ../archives/libusb-1.0.9.tar.bz2
+	tar -jxf archives/libusb-1.0.9.tar.bz2
 fi
 if ! grep -q __ANDROID__ libusb-1.0.9/libusb/io.c ; then
 	# patch libusb to build with android-ndk
-	patch -p1 < ../libusb-1.0.9-android.patch  libusb-1.0.9/libusb/io.c
+	patch -p1 < libusb-1.0.9-android.patch  libusb-1.0.9/libusb/io.c
 fi
+
+pushd build
 if [ ! -e $PKG_CONFIG_PATH/libusb-1.0.pc ] ; then
 	mkdir -p libusb-build-$ARCH
 	pushd libusb-build-$ARCH
-	../libusb-1.0.9/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared
+	../../libusb-1.0.9/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared
 	make
 	make install
 	popd
 fi
+popd
 
 # Extract and build libftdi
 if [ ! -e libftdi1-1.1 ] ; then
-	tar -jxf ../archives/libftdi1-1.1.tar.bz2
+	tar -jxf archives/libftdi1-1.1.tar.bz2
 fi
+
+pushd build
 if [ ! -e $PKG_CONFIG_PATH/libftdipp1.pc ] ; then
 	mkdir -p libftdi1-1.1-build-$ARCH
 	pushd libftdi1-1.1-build-$ARCH
-	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DBUILD_SHARED_LIBS=OFF ../libftdi1-1.1
+	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DBUILD_SHARED_LIBS=OFF -DCMAKE_FIND_ROOT_PATH=${PREFIX} -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY ../../libftdi1-1.1
 	make
 	make install
 	popd
 fi
+popd
 
 # Build libdivecomputer
-if [ ! -e ../libdivecomputer/configure ] ; then
-	pushd ../libdivecomputer
+if [ ! -e libdivecomputer/configure ] ; then
+	pushd libdivecomputer
 	autoreconf -i
 	popd
 fi
 
+pushd build
 if [ ! -e $PKG_CONFIG_PATH/libdivecomputer.pc ] ; then
 	mkdir -p libdivecomputer-build-$ARCH
 	pushd libdivecomputer-build-$ARCH
-	../../libdivecomputer/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared LDFLAGS=-llog
+	../../libdivecomputer/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared --enable-logging LDFLAGS=-llog
 	make
 	make install
 	popd
 fi
+popd
 
 popd # from crossbuild
 
