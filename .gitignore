@@ -24,4 +24,5 @@ crossbuild/build/
 crossbuild/archives/
 crossbuild/ndk-*/
 crossbuild/libftdi*/
-crossbuild/libusb*/
+crossbuild/libusb-*/
+

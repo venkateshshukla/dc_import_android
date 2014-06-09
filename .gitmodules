@@ -1,3 +1,6 @@
 [submodule "crossbuild/libdivecomputer"]
 	path = crossbuild/libdivecomputer
 	url = https://github.com/venkateshshukla/libdivecomputer.git
+[submodule "crossbuild/libusb"]
+	path = crossbuild/libusb
+	url = https://github.com/venkateshshukla/libusb.git

@@ -32,42 +32,37 @@ export CC=${BUILDCHAIN}-gcc
 export CXX=${BUILDCHAIN}-g++
 
 # Download libdivecomputer submodule
-if [ ! -e libdivecomputer/configure.ac ] ; then
+if [ ! -e libdivecomputer/configure.ac ] || [ ! -e libusb/configure.ac ] ; then
 	git submodule init
 	git submodule update
 fi
 
 # Fetch external repos
 mkdir -vp archives
+
 pushd archives
-
-if [ ! -e libusb-1.0.9.tar.bz2 ] ; then
-	wget http://sourceforge.net/projects/libusb/files/libusb-1.0/libusb-1.0.9/libusb-1.0.9.tar.bz2
-fi
-
 if [ ! -e libftdi1-1.1.tar.bz2 ] ; then
 	wget http://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.1.tar.bz2
 fi
-
 popd
+
 
 # Prepare for building
 mkdir -vp build
 
-# Extract and build libusb
-if [ ! -e libusb-1.0.9 ] ; then
-	tar -jxf archives/libusb-1.0.9.tar.bz2
-fi
-if ! grep -q __ANDROID__ libusb-1.0.9/libusb/io.c ; then
-	# patch libusb to build with android-ndk
-	patch -p1 < libusb-1.0.9-android.patch  libusb-1.0.9/libusb/io.c
+# Build libusb
+
+if [ ! -e libusb/configure ] ; then
+	pushd libusb
+	autoreconf --install
+	popd
 fi
 
 pushd build
 if [ ! -e $PKG_CONFIG_PATH/libusb-1.0.pc ] ; then
 	mkdir -p libusb-build-$ARCH
 	pushd libusb-build-$ARCH
-	../../libusb-1.0.9/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared
+	../../libusb/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared
 	make
 	make install
 	popd
