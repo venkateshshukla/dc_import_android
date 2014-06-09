@@ -31,12 +31,15 @@ Dependencies
 4. Android NDK and SDK
    http://developer.android.com/sdk/index.html
    http://developer.android.com/tools/sdk/ndk/index.html
+5. Actionbarsherlock - library used for android application
+   http://www.actionbarsherlock.com
 
 Building
 ========
 1. For building, one need to use the build.sh script.
    Modify the script to add the location of android-sdk
-   and android-ndk.
+   and android-ndk. Also, modify lines at the end to point
+   to proper position of actionbarsherlock library.
 2. Run bash build.sh x86 (or) bash build.sh arm according
    to the architecture you want to support. The default is
    x86.
@@ -45,13 +48,20 @@ Building
 4. It also runs ndk-build on successful completion for
    building jni libraries for the application.
    Android.mk is the make file for this build.
-5. Import the folder to Eclipse and run the application.
+5. The script also builds the android application and installs
+   on the attached device/emulator and starts the application.
 
-Note: For generating the Jni header files, one could use
-javah provided by JDK. For this project, I use this command
-to generate the headers.
-javah -jni -v -d jni -classpath bin/classes:../actionbarsherlock/bin/classes\
-	      :$ANDROID_SDK/platforms/android-19/android.jar com.subsurface.Home
+Note:
+a. For generating the Jni header files, one could use
+   javah provided by JDK. For this project, I use this command
+   to generate the headers.
+
+   javah -jni -v -d jni -classpath bin/classes:../actionbarsherlock/bin/classes:$ANDROID_SDK/platforms/android-19/android.jar com.subsurface.Home
+
+b. If you are getting build errors, make sure that you have run
+   android update project on the actionbarsherlock directory as well.
+   Also, use command 'ant clean' to clean actionbarsherlock and/or
+   your project if you get 'crunch' related errors.
 
 Android Application
 ===================
