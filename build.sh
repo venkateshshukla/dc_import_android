@@ -32,7 +32,7 @@ export CC=${BUILDCHAIN}-gcc
 export CXX=${BUILDCHAIN}-g++
 
 # Download libdivecomputer submodule
-if [ ! -e libdivecomputer ] ; then
+if [ ! -e libdivecomputer/configure.ac ] ; then
 	git submodule init
 	git submodule update
 fi
@@ -110,4 +110,22 @@ popd
 
 popd # from crossbuild
 
+if [[ $? == 0 ]] ; then
+echo "Finished building requisites."
+fi
+
+# Build native libraries
 ndk-build -B
+
+# Update application if build.xml is not present
+if [ ! -e build.xml ] ; then
+	android update project -n HwDiveImport -p ./ -t android-19 -l ../actionbarsherlock --subprojects
+fi
+
+# Build the project in debug mode and install on the connected device
+#ant clean
+#ant -Dadb.device.arg="-e" debug install
+ant debug install
+
+# Run the application on the emulator
+adb shell am start -a android.intent.action.MAIN -n com.subsurface/com.subsurface.Home
