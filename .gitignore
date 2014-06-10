@@ -21,8 +21,5 @@ obj/
 
 # Crossbuild archives and builds
 crossbuild/build/
-crossbuild/archives/
 crossbuild/ndk-*/
-crossbuild/libftdi-*/
-crossbuild/libusb-*/
 

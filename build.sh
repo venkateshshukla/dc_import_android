@@ -31,58 +31,39 @@ export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig
 export CC=${BUILDCHAIN}-gcc
 export CXX=${BUILDCHAIN}-g++
 
-# Download libdivecomputer submodule
-if [ ! -e libdivecomputer/configure.ac ] || [ ! -e libusb/configure.ac ] ; then
+# Download libdivecomputer, libusb and libftdi submodule
+if [ ! -e libdivecomputer/configure.ac ] || [ ! -e libusb/configure.ac ] || [ ! -e libftdi/CMakeLists.txt] ; then
 	git submodule init
 	git submodule update
 fi
-
-# Fetch external repos
-mkdir -vp archives
-
-pushd archives
-if [ ! -e libftdi1-1.1.tar.bz2 ] ; then
-	wget http://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.1.tar.bz2
-fi
-popd
-
 
 # Prepare for building
 mkdir -vp build
 
 # Build libusb
-
 if [ ! -e libusb/configure ] ; then
 	pushd libusb
 	autoreconf --install
 	popd
 fi
 
-pushd build
-if [ ! -e $PKG_CONFIG_PATH/libusb-1.0.pc ] ; then
-	mkdir -p libusb-build-$ARCH
-	pushd libusb-build-$ARCH
-	../../libusb/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared
-	make
-	make install
-	popd
+mkdir -p build/libusb-build-$ARCH
+pushd build/libusb-build-$ARCH
+if [ ! -e Makefile ] ; then
+	../../libusb/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared --disable-udev
 fi
+make
+make install
 popd
 
-# Extract and build libftdi
-if [ ! -e libftdi1-1.1 ] ; then
-	tar -jxf archives/libftdi1-1.1.tar.bz2
+# Build libftdi
+mkdir -p build/libftdi-build-$ARCH
+pushd build/libftdi-build-$ARCH
+if [ ! -e Makefile ] ; then
+	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_SHARED_LIBS=OFF ../../libftdi
 fi
-
-pushd build
-if [ ! -e $PKG_CONFIG_PATH/libftdipp1.pc ] ; then
-	mkdir -p libftdi1-1.1-build-$ARCH
-	pushd libftdi1-1.1-build-$ARCH
-	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DBUILD_SHARED_LIBS=OFF -DCMAKE_FIND_ROOT_PATH=${PREFIX} -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY ../../libftdi1-1.1
-	make
-	make install
-	popd
-fi
+make
+make install
 popd
 
 # Build libdivecomputer
@@ -92,15 +73,13 @@ if [ ! -e libdivecomputer/configure ] ; then
 	popd
 fi
 
-pushd build
-if [ ! -e $PKG_CONFIG_PATH/libdivecomputer.pc ] ; then
-	mkdir -p libdivecomputer-build-$ARCH
-	pushd libdivecomputer-build-$ARCH
+mkdir -p build/libdivecomputer-build-$ARCH
+pushd build/libdivecomputer-build-$ARCH
+if [ ! -e Makefile ] ; then
 	../../libdivecomputer/configure --host=${BUILDCHAIN} --prefix=${PREFIX} --enable-static --disable-shared --enable-logging LDFLAGS=-llog
-	make
-	make install
-	popd
 fi
+make
+make install
 popd
 
 popd # from crossbuild
