@@ -4,3 +4,6 @@
 [submodule "crossbuild/libusb"]
 	path = crossbuild/libusb
 	url = https://github.com/venkateshshukla/libusb.git
+[submodule "crossbuild/libftdi"]
+	path = crossbuild/libftdi
+	url = https://github.com/venkateshshukla/libftdi.git

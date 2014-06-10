@@ -23,6 +23,6 @@ obj/
 crossbuild/build/
 crossbuild/archives/
 crossbuild/ndk-*/
-crossbuild/libftdi*/
+crossbuild/libftdi-*/
 crossbuild/libusb-*/
 
