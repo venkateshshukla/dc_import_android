@@ -103,3 +103,14 @@ This experiment failed because the file descriptor passed on by
 UsbDeviceConnection is the file descriptor of underlying USB device
 and not the tty device used for talking with it. Hence the error
 received in the logcat was "ENOTTY : Not a typewriter".
+
+Experiment 3
+-------------
+In this experiment, a new file serial_ftdi.c is made which would be
+compiled instead of serial_posix.c while building on android. Make
+of libdivecomputer is modified accordingly. Also, libftdi dependecy is
+added. Initially on running this application, I am getting error
+while opening device. This I tracked down to ERROR_ACCESS of libusb.
+Now, this is the main challenge of this approach. Permissions of
+usage of USB on android. Looking further in this.
+
