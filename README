@@ -114,3 +114,33 @@ while opening device. This I tracked down to ERROR_ACCESS of libusb.
 Now, this is the main challenge of this approach. Permissions of
 usage of USB on android. Looking further in this.
 
+Success
+--------
+After tweaking libusb and libftdi, I have been successful in extraction
+of data from divecompute Heinrichs Weikamp OSTC 3. The key to this
+was getting permission from android user. After this, you can open the
+attached USB device, and can obtain its USB file descriptor. All this
+is done on the java side of the code. Now, using the above file
+descriptor, make a libusb_device via libftdi. Now, for this whole
+procedure, the USB fd should be passed to libusb. Hence, we fell
+back to what was done in Experiment 2. Tweaking libdivecomputer
+to pass USB fd instead of file name. But this time it was done
+intelligently to allow compilation both on android as well as normal
+systems ( Heavy usage of Macros ).
+Also, libftdi and libusb were tweaked in the same manner - to accept
+USB fd.
+After all this, when called upon to download dives from android,
+the device did it perfectly. The result can be seen on logcat. One
+thing must be kept in mind for logging. For seeing all the logs passed
+to stderr on android you should follow certain steps. It could be
+seen here :
+http://venkateshshukla.wordpress.com/2014/06/05/android-from-command-line-useful-things/
+
+Todo
+----
+
+Now, for actually making libdivecomputer to be useful, the Java
+parts should be eliminated. Hence, the list of USB devices
+and the dialog asking permission to use the device must be
+somehow ( using JNI ) be implemented in libdivecomputer itself.
+See if this is possible.
