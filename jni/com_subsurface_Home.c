@@ -615,7 +615,7 @@ search (dc_descriptor_t **out, const char *name, dc_family_t backend, unsigned i
 
 
 static dc_status_t
-dowork (dc_context_t *context, dc_descriptor_t *descriptor, const char *name, const char *rawfile, const char *xmlfile, int memory, int dives, dc_buffer_t *fingerprint)
+dowork (dc_context_t *context, dc_descriptor_t *descriptor, int usb_fd, const char *rawfile, const char *xmlfile, int memory, int dives, dc_buffer_t *fingerprint)
 {
 	char *devname = NULL;
 	dc_status_t rc = DC_STATUS_SUCCESS;
@@ -632,7 +632,7 @@ dowork (dc_context_t *context, dc_descriptor_t *descriptor, const char *name, co
 
 	LOGV ("Opening the device");
 
-	rc = dc_device_open (&device, context, descriptor, name);
+	rc = dc_device_open (&device, context, descriptor, usb_fd);
 	if (rc != DC_STATUS_SUCCESS) {
 		WARNING ("Error opening device.");
 		return rc;
@@ -746,7 +746,7 @@ dowork (dc_context_t *context, dc_descriptor_t *descriptor, const char *name, co
 }
 
 
-int hw_test_import (int dev_fd)
+int hw_test_import (int usb_fd)
 {
 	// Default values.
 	dc_family_t backend = DC_FAMILY_HW_OSTC3;
@@ -794,8 +794,8 @@ int hw_test_import (int dev_fd)
 
 	dc_buffer_t *fp = fpconvert (fingerprint);
 
-	LOGV ("Calling dowork with fd : %d", dev_fd);
-	rc = dowork (context, descriptor, name, rawfile, xmlfile, memory, dives, fp);
+	LOGV ("Calling dowork with fd : %d", usb_fd);
+	rc = dowork (context, descriptor, usb_fd, rawfile, xmlfile, memory, dives, fp);
 	dc_buffer_free (fp);
 	message ("Result: %s\n", errmsg (rc));
 
