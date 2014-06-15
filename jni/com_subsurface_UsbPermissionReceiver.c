@@ -14,11 +14,11 @@
 #include "utils.h"
 #include "common.h"
 
-#include "com_subsurface_Home.h"
+#include "com_subsurface_UsbPermissionReceiver.h"
 
 #include <android/log.h>
 
-#define LOG_TAG "com_subsurface_Home.c"
+#define LOG_TAG "com_subsurface_UsbPermissionReceiver.c"
 
 static void
 androidlogfunc (dc_context_t *context, dc_loglevel_t loglevel, const char *file,
@@ -807,8 +807,8 @@ int hw_test_import (int usb_fd)
 	return rc != DC_STATUS_SUCCESS ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
-JNIEXPORT void Java_com_subsurface_Home_doImport (JNIEnv* pEnv, jobject pThis, jint fd) {
-
+JNIEXPORT void JNICALL Java_com_subsurface_UsbPermissionReceiver_doImport (JNIEnv *pEnv, jobject pThis, jint fd)
+{
 	LOGD ("Native code doImport was called with fd : %d\n", fd);
 	int n = hw_test_import(fd);
 	if (n == EXIT_SUCCESS)

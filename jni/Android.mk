@@ -33,7 +33,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := ostc3_import
-LOCAL_SRC_FILES := com_subsurface_Home.c
+LOCAL_SRC_FILES := com_subsurface_UsbPermissionReceiver.c
 LOCAL_LDLIBS := -llog
 LOCAL_C_INCLUDES := $(INCLUDE_PATH)
 LOCAL_WHOLE_STATIC_LIBRARIES := prebuilt_libusb prebuilt_libftdi prebuilt_libdivecomputer
