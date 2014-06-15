@@ -31,7 +31,7 @@ public class Home extends SherlockListActivity implements OnItemClickListener {
 	static {
 		System.loadLibrary("ostc3_import");
 	}
-	
+
 	private UsbManager usbManager;
 	private HashMap<String, UsbDevice> devicemap;
 	private ArrayList<UsbDevice> allUsbDevices;
@@ -40,7 +40,7 @@ public class Home extends SherlockListActivity implements OnItemClickListener {
 	private PendingIntent permissionIntent;
 	private UsbPermissionReceiver permissionReceiver;
 	private static final String TAG = "UseUsbEnum";
-	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+	private static final String ACTION_USB_PERMISSION = "org.subsurface.USB_PERMISSION";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

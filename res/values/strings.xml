@@ -1,15 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">HwDataImport</string>
-
     <string name="refresh">Refresh</string>
-
     <string name="title_usb_list">USB Device List</string>
     <string name="title_usb_import">Import Info</string>
-
     <string name="tv_import_log">Import Logs</string>
-
     <string name="dummy_device_name">Device Name</string>
     <string name="dummy_device_pid">Device Product ID</string>
     <string name="dummy_device_vid">Device Vendor ID</string>
+    <string name="title_activity_main">Main</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="instruction_main">Choose which of the following should be chosen for getting USB permissions.</string>
+    <string name="button_native_activity">Native Activity</string>
+    <string name="button_java_activity">Java Activity</string>
+    <string name="title_activity_native_usb">NativeUsb</string>
 
 </resources>
