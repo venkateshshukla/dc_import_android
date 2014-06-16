@@ -89,7 +89,7 @@ echo "Finished building requisites."
 fi
 
 # Build native libraries
-ndk-build -B
+$ANDROID_NDK_ROOT/ndk-build -B
 
 # Update application if build.xml is not present
 if [ ! -e build.xml ] ; then
