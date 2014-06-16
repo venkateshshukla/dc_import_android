@@ -11,9 +11,11 @@ export ARCH=${1-x86}
 if [ "$ARCH" = "arm" ] ;
 then
 	BUILDCHAIN=arm-linux-androideabi
+	export APP_ABI=armv7
 elif [ "$ARCH" = "x86" ] ;
 then
 	BUILDCHAIN=i686-linux-android
+	export APP_ABI=x86
 fi
 
 pushd crossbuild
