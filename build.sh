@@ -60,7 +60,7 @@ popd
 mkdir -p build/libftdi-build-$ARCH
 pushd build/libftdi-build-$ARCH
 if [ ! -e Makefile ] ; then
-	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_SHARED_LIBS=OFF ../../libftdi
+	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_SHARED_LIBS=OFF -DSTATICLIBS=ON -DPYTHON_BINDINGS=OFF -DDOCUMENTATION=OFF -DFTDIPP=OFF ../../libftdi
 fi
 make
 make install
