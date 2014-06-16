@@ -11,9 +11,11 @@ export ARCH=${1-x86}
 if [ "$ARCH" = "arm" ] ;
 then
 	BUILDCHAIN=arm-linux-androideabi
+	export APP_ABI=armv7
 elif [ "$ARCH" = "x86" ] ;
 then
 	BUILDCHAIN=i686-linux-android
+	export APP_ABI=x86
 fi
 
 pushd crossbuild
@@ -60,7 +62,7 @@ popd
 mkdir -p build/libftdi-build-$ARCH
 pushd build/libftdi-build-$ARCH
 if [ ! -e Makefile ] ; then
-	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_SHARED_LIBS=OFF ../../libftdi
+	cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_PREFIX_PATH=${PREFIX} -DBUILD_SHARED_LIBS=OFF -DSTATICLIBS=ON -DPYTHON_BINDINGS=OFF -DDOCUMENTATION=OFF -DFTDIPP=OFF ../../libftdi
 fi
 make
 make install
@@ -89,11 +91,11 @@ echo "Finished building requisites."
 fi
 
 # Build native libraries
-ndk-build -B
+$ANDROID_NDK_ROOT/ndk-build -B
 
 # Update application if build.xml is not present
 if [ ! -e build.xml ] ; then
-	android update project -n HwDiveImport -p ./ -t android-19 -l ../actionbarsherlock --subprojects
+	android update project -p  .
 fi
 
 # Build the project in debug mode and install on the connected device

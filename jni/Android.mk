@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
-LIB_PATH := ../crossbuild/ndk-x86/sysroot/usr/lib
-INCLUDE_PATH := $(LOCAL_PATH)/../crossbuild/ndk-x86/sysroot/usr/include
+LIB_PATH := ../crossbuild/ndk-$(ARCH)/sysroot/usr/lib
+INCLUDE_PATH := $(LOCAL_PATH)/../crossbuild/ndk-$(ARCH)/sysroot/usr/include
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := prebuilt_libusb

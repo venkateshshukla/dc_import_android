@@ -16,12 +16,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.app.ListActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import com.subsurface.ui.DevicelistAdapter;
 
-public class Home extends SherlockListActivity implements OnItemClickListener {
+public class Home extends ListActivity implements OnItemClickListener {
 
 	private UsbManager usbManager;
 	private HashMap<String, UsbDevice> devicemap;
@@ -67,7 +68,7 @@ public class Home extends SherlockListActivity implements OnItemClickListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.usb_import, menu);
+		getMenuInflater().inflate(R.menu.usb_import, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
