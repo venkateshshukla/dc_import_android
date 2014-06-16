@@ -9,16 +9,15 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
 
-public class UsbImport extends SherlockActivity {
+public class UsbImport extends Activity {
 
     private Intent receivedIntent;
     private TextView tvImportLogs;
@@ -35,13 +34,13 @@ public class UsbImport extends SherlockActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.usb_import);
         setTitle(R.string.title_usb_import);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         receivedIntent = getIntent();
         tvImportLogs = (TextView) findViewById(R.id.tvImportLogs);
         logs = "";
-        getSherlock().setProgressBarIndeterminateVisibility(true);
+        setProgressBarIndeterminateVisibility(true);
         importTask = new ImportTask();
         threadState = ThreadState.STOPPED;
     }
@@ -68,16 +67,14 @@ public class UsbImport extends SherlockActivity {
                 this.onResume();
                 tvImportLogs.setText(logs);
                 return true;
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
+			default:
+                return false;
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.usb_import, menu);
+        getMenuInflater().inflate(R.menu.usb_import, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -131,7 +128,7 @@ public class UsbImport extends SherlockActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            getSherlock().setProgressBarIndeterminateVisibility(false);
+            setProgressBarIndeterminateVisibility(false);
             threadState = ThreadState.RUNNING;
 
             usbInterface = device.getInterface(0);

@@ -95,7 +95,7 @@ $ANDROID_NDK_ROOT/ndk-build -B
 
 # Update application if build.xml is not present
 if [ ! -e build.xml ] ; then
-	android update project -n HwDiveImport -p ./ -t android-19 -l ../actionbarsherlock --subprojects
+	android update project -p  .
 fi
 
 # Build the project in debug mode and install on the connected device
