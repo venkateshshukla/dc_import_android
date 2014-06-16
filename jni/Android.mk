@@ -39,3 +39,10 @@ LOCAL_C_INCLUDES := $(INCLUDE_PATH)
 LOCAL_WHOLE_STATIC_LIBRARIES := prebuilt_libusb prebuilt_libftdi prebuilt_libdivecomputer
 LOCAL_STATIC_LIBRARIES := local_utils local_common
 include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := usbpermission
+LOCAL_SRC_FILES := usbpermission.c
+LOCAL_LDLIBS := -llog
+include $(BUILD_SHARED_LIBRARY)
+
